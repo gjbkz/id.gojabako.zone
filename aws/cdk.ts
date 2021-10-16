@@ -1,5 +1,6 @@
 import * as cdk from '@aws-cdk/core';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
+import * as lambda from '@aws-cdk/aws-lambda';
 import {stackName, region, vercelEnv} from './constants';
 import {output} from './output';
 
@@ -21,4 +22,10 @@ const table = new dynamodb.Table(stack, 'Table', {
      */
     removalPolicy: vercelEnv === 'develop' ? cdk.RemovalPolicy.DESTROY : cdk.RemovalPolicy.RETAIN,
 });
-output(stack, 'TableArn', table.tableArn);
+output(stack, 'TableName', table.tableName);
+const rotateKeyLambda = new lambda.Function(stack, 'RotateKey', {
+    code: new lambda.AssetCode('cdk.out/lambda/rotateKey'),
+    runtime: lambda.Runtime.NODEJS_14_X,
+    handler: 'index.handler',
+});
+output(stack, 'RotateKeyFunctionName', rotateKeyLambda.functionName);
