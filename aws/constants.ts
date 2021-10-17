@@ -6,3 +6,6 @@ export const policyName = packageJson.name.replace(/[^\w-]+/g, '-');
 export const stackName = `${policyName}-${vercelEnv}`;
 
 export const rootDirectoryUrl = new URL('..', `file://${__dirname}/`);
+export const lambdaSourceDirectoryUrl = new URL('aws/lambda/', rootDirectoryUrl);
+export const lambdaDirectoryUrl = new URL('cdk.out/lambda/', rootDirectoryUrl);
+export const layerDirectoryUrl = new URL('cdk.out/layer/', rootDirectoryUrl);

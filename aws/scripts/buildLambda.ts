@@ -1,38 +1,46 @@
 import * as fs from 'fs';
 import * as esbuild from 'esbuild';
 import packageJson from '../../package.json';
-
-import {rootDirectoryUrl} from '../constants';
 import {runScript} from '../util/runScript';
-
-const lambdaDirectoryUrl = new URL('aws/lambda/', rootDirectoryUrl);
-const outputDirectoryUrl = new URL('cdk.out/lambda/', rootDirectoryUrl);
+import {lambdaDirectoryUrl, lambdaSourceDirectoryUrl, layerDirectoryUrl} from '../constants';
 
 runScript(async () => {
-    await Promise.all([
-        bundleCode(),
-    ]);
+    const [handlers, dependencies] = await Promise.all([bundleCode(), bundleLayer()]);
+    return {handlers, dependencies};
 });
 
 const bundleCode = async () => {
-    for await (const fileUrl of listLambdaHandlers()) {
-        const destUrl = new URL(
-            fileUrl.pathname.slice(lambdaDirectoryUrl.pathname.length),
-            outputDirectoryUrl,
-        );
-        await esbuild.build({
+    const handlerFileNames: Array<string> = [];
+    const external = Object.keys(packageJson.dependencies);
+    for await (const fileUrl of listLambdaHandlerFileUrls()) {
+        const relativePath = fileUrl.pathname.slice(lambdaSourceDirectoryUrl.pathname.length);
+        const destUrl = new URL(relativePath, lambdaDirectoryUrl);
+        esbuild.buildSync({
             entryPoints: [fileUrl.pathname],
             outfile: destUrl.pathname,
             bundle: true,
             platform: 'node',
-            external: Object.keys(packageJson.dependencies as Record<string, unknown>),
+            external,
             format: 'cjs',
         });
+        handlerFileNames.push(relativePath);
     }
+    return handlerFileNames;
 };
 
-const listLambdaHandlers = async function* (): AsyncGenerator<URL> {
-    for await (const fileUrl of listFiles(lambdaDirectoryUrl)) {
+const bundleLayer = async () => {
+    const nodeLayerDirectoryUrl = new URL('nodejs/', layerDirectoryUrl);
+    await fs.promises.mkdir(nodeLayerDirectoryUrl, {recursive: true});
+    const packageJsonUrl = new URL('package.json', nodeLayerDirectoryUrl);
+    await fs.promises.writeFile(packageJsonUrl, JSON.stringify({
+        private: true,
+        dependencies: packageJson.dependencies,
+    }, null, 4));
+    return packageJson.dependencies;
+};
+
+const listLambdaHandlerFileUrls = async function* (): AsyncGenerator<URL> {
+    for await (const fileUrl of listFiles(lambdaSourceDirectoryUrl)) {
         if (fileUrl.pathname.endsWith('/index.ts')) {
             yield fileUrl;
         }
