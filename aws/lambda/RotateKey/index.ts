@@ -2,7 +2,7 @@ import * as console from 'console';
 import {DynamoDBClient, QueryCommand} from '@aws-sdk/client-dynamodb';
 import {convertToAttr} from '@aws-sdk/util-dynamodb';
 
-const client = new DynamoDBClient({});
+const client = new DynamoDBClient({region: process.env.TableRegion});
 const command = new QueryCommand({
     TableName: process.env.TableName,
     KeyConditionExpression: 'pk = :pk',

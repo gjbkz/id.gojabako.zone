@@ -5,10 +5,11 @@ import * as events from '@aws-cdk/aws-events';
 import * as eventsTargets from '@aws-cdk/aws-events-targets';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as cdk from '@aws-cdk/core';
-import {getRelativePath, lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl, region, stackName, vercelEnv} from './constants';
+import {getRelativePath, lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl, region, getStackName, vercelEnv} from './constants';
 import {output} from './output';
 
 const app = new cdk.App();
+const stackName = getStackName(vercelEnv);
 const stack = new cdk.Stack(app, stackName, {env: {region}});
 const dashboard = new cloudwatch.Dashboard(stack, 'Dashboard', {
     /**
@@ -67,6 +68,7 @@ const lambdaFnRotateKey: lambda.IFunction = new lambda.Function(stack, 'RotateKe
     handler: 'index.handler',
     environment: {
         TableName: table.tableName,
+        TableRegion: table.stack.region,
     },
 });
 
