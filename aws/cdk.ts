@@ -11,6 +11,9 @@ import {output} from './output';
 const app = new cdk.App();
 const stackName = getStackName(vercelEnv);
 const stack = new cdk.Stack(app, stackName, {env: {region}});
+const lambdaBasicExecution = iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole');
+const xrayDaemonWrite = iam.ManagedPolicy.fromAwsManagedPolicyName('AWSXRayDaemonWriteAccess');
+
 const dashboard = new cloudwatch.Dashboard(stack, 'Dashboard', {
     /**
      * aws-cdkはdashboardNameの先頭にスタック名をつけないため、手動でつけます。
@@ -45,6 +48,16 @@ queryPrivateKeyPolicy.addStatements(new iam.PolicyStatement({
         },
     },
 }));
+const putPrivateKeyPolicy = new iam.ManagedPolicy(stack, 'PutPrivateKeyPolicy');
+putPrivateKeyPolicy.addStatements(new iam.PolicyStatement({
+    actions: ['dynamodb:PutItem'],
+    resources: [table.tableArn],
+    conditions: {
+        'ForAllValues:StringEquals': {
+            'dynamodb:LeadingKeys': ['PrivateKey'],
+        },
+    },
+}));
 
 const lambdaLayer = new lambda.LayerVersion(stack, 'LambdaLayer', {
     /**
@@ -58,7 +71,12 @@ const lambdaLayer = new lambda.LayerVersion(stack, 'LambdaLayer', {
 
 const roleRotateKey = new iam.Role(stack, 'RotateKeyRole', {
     assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
-    managedPolicies: [queryPrivateKeyPolicy],
+    managedPolicies: [
+        lambdaBasicExecution,
+        xrayDaemonWrite,
+        queryPrivateKeyPolicy,
+        putPrivateKeyPolicy,
+    ],
 });
 const lambdaFnRotateKey: lambda.IFunction = new lambda.Function(stack, 'RotateKey', {
     role: roleRotateKey,
