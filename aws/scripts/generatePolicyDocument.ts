@@ -1,6 +1,6 @@
 import {STSClient, GetCallerIdentityCommand} from '@aws-sdk/client-sts';
 import {runScript} from '../util/runScript';
-import {region} from '../constants';
+import {region, stackName} from '../constants';
 import {enableCache} from '../util/enableCache';
 
 const stsClient = new STSClient({region});
@@ -28,74 +28,58 @@ const getPolicyDocument = (accountId: string) => ({
     Statement: [
         {
             Effect: 'Allow',
-            Action: [
-                's3:GetObject',
-            ],
-            Resource: [
-                'arn:aws:s3:::cdktoolkit-stagingbucket-*/*',
-            ],
+            Action: ['iam:*Policy', 'iam:*PolicyVersion', 'iam:*PolicyVersions'],
+            Resource: [`arn:aws:iam::${accountId}:policy/${stackName}*`],
+        },
+        {
+            Effect: 'Allow',
+            Action: ['iam:*Role'],
+            Resource: [`arn:aws:iam::${accountId}:role/${stackName}*`],
+        },
+        {
+            Effect: 'Allow',
+            Action: ['s3:*Object'],
+            Resource: ['arn:aws:s3:::cdktoolkit-stagingbucket*/*'],
+        },
+        {
+            Effect: 'Allow',
+            Action: ['dynamodb:*Table', 'dynamodb:*TimeToLive'],
+            Resource: [`arn:aws:dynamodb:${region}:${accountId}:table/${stackName}*`],
+        },
+        {
+            Effect: 'Allow',
+            Action: ['cloudformation:*Stack', 'cloudformation:*ChangeSet'],
+            Resource: [`arn:aws:cloudformation:${region}:${accountId}:stack/${stackName}*/*`],
+        },
+        {
+            Effect: 'Allow',
+            Action: ['iam:*Role', 'iam:*RolePolicy'],
+            Resource: [`arn:aws:iam::${accountId}:role/${stackName}*`],
         },
         {
             Effect: 'Allow',
             Action: [
-                'dynamodb:DescribeTable',
-                'dynamodb:CreateTable',
-                'dynamodb:DeleteTable',
-                'dynamodb:UpdateTable',
-                'dynamodb:DescribeTimeToLive',
-                'dynamodb:UpdateTimeToLive',
+                'lambda:*Function',
+                'lambda:*FunctionConfiguration',
+                'lambda:*FunctionCode',
+                'lambda:*Permission',
             ],
-            Resource: [
-                `arn:aws:dynamodb:${region}:${accountId}:table/id-gojabako-zone-*`,
-            ],
+            Resource: [`arn:aws:lambda:${region}:${accountId}:function:${stackName}*`],
         },
         {
             Effect: 'Allow',
-            Action: [
-                'cloudformation:DeleteStack',
-                'cloudformation:CreateChangeSet',
-                'cloudformation:DescribeChangeSet',
-                'cloudformation:ExecuteChangeSet',
-                'cloudformation:DeleteChangeSet',
-            ],
-            Resource: [
-                `arn:aws:cloudformation:${region}:${accountId}:stack/id-gojabako-zone-*/*`,
-            ],
+            Action: ['lambda:*LayerVersion'],
+            Resource: [`arn:aws:lambda:${region}:${accountId}:layer:${stackName}*`],
         },
         {
             Effect: 'Allow',
-            Action: [
-                'iam:CreateRole',
-                'iam:GetRole',
-                'iam:PassRole',
-                'iam:DeleteRole',
-                'iam:AttachRolePolicy',
-                'iam:DetachRolePolicy',
-            ],
-            Resource: [
-                `arn:aws:iam::${accountId}:role/id-gojabako-zone-*`,
-            ],
+            Action: ['events:*Rule', 'events:*Targets'],
+            Resource: [`arn:aws:events:${region}:${accountId}:rule/${stackName}*`],
         },
         {
             Effect: 'Allow',
-            Action: [
-                'lambda:CreateFunction',
-                'lambda:UpdateFunctionConfiguration',
-                'lambda:DeleteFunction',
-            ],
-            Resource: [
-                `arn:aws:lambda:${region}:${accountId}:function:id-gojabako-zone-*`,
-            ],
-        },
-        {
-            Effect: 'Allow',
-            Action: [
-                'lambda:PublishLayerVersion',
-                'lambda:DeleteLayerVersion',
-            ],
-            Resource: [
-                `arn:aws:lambda:${region}:${accountId}:layer:id-gojabako-zone-*`,
-            ],
+            Action: ['cloudwatch:*Dashboard', 'cloudwatch:*Dashboards'],
+            Resource: [`arn:aws:cloudwatch::${accountId}:dashboard/${stackName}*`],
         },
     ],
 });

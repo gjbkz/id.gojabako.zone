@@ -2,7 +2,8 @@ import * as fs from 'fs';
 import * as esbuild from 'esbuild';
 import packageJson from '../../package.json';
 import {runScript} from '../util/runScript';
-import {lambdaDirectoryUrl, lambdaSourceDirectoryUrl, layerDirectoryUrl} from '../constants';
+import {lambdaCodeDirectoryUrl, lambdaSourceDirectoryUrl, lambdaLayerDirectoryUrl} from '../constants';
+import {spawn} from '../util/spawn';
 
 runScript(async () => {
     const [handlers, dependencies] = await Promise.all([bundleCode(), bundleLayer()]);
@@ -14,7 +15,7 @@ const bundleCode = async () => {
     const external = Object.keys(packageJson.dependencies);
     for await (const fileUrl of listLambdaHandlerFileUrls()) {
         const relativePath = fileUrl.pathname.slice(lambdaSourceDirectoryUrl.pathname.length);
-        const destUrl = new URL(relativePath, lambdaDirectoryUrl);
+        const destUrl = new URL(relativePath.replace(/\.ts$/, '.js'), lambdaCodeDirectoryUrl);
         esbuild.buildSync({
             entryPoints: [fileUrl.pathname],
             outfile: destUrl.pathname,
@@ -29,13 +30,14 @@ const bundleCode = async () => {
 };
 
 const bundleLayer = async () => {
-    const nodeLayerDirectoryUrl = new URL('nodejs/', layerDirectoryUrl);
+    const nodeLayerDirectoryUrl = new URL('nodejs/', lambdaLayerDirectoryUrl);
     await fs.promises.mkdir(nodeLayerDirectoryUrl, {recursive: true});
     const packageJsonUrl = new URL('package.json', nodeLayerDirectoryUrl);
     await fs.promises.writeFile(packageJsonUrl, JSON.stringify({
         private: true,
         dependencies: packageJson.dependencies,
     }, null, 4));
+    await spawn('npm install --production', {cwd: nodeLayerDirectoryUrl});
     return packageJson.dependencies;
 };
 

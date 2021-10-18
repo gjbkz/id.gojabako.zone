@@ -7,5 +7,12 @@ export const stackName = `${policyName}-${vercelEnv}`;
 
 export const rootDirectoryUrl = new URL('..', `file://${__dirname}/`);
 export const lambdaSourceDirectoryUrl = new URL('aws/lambda/', rootDirectoryUrl);
-export const lambdaDirectoryUrl = new URL('cdk.out/lambda/', rootDirectoryUrl);
-export const layerDirectoryUrl = new URL('cdk.out/layer/', rootDirectoryUrl);
+export const lambdaLayerDirectoryUrl = new URL('cdk.out/lambda/layer/', rootDirectoryUrl);
+export const lambdaCodeDirectoryUrl = new URL('cdk.out/lambda/code/', rootDirectoryUrl);
+export const getRelativePath = ({pathname}: URL): string => {
+    const {pathname: rootDirectoryPathname} = rootDirectoryUrl;
+    if (pathname.startsWith(rootDirectoryPathname)) {
+        return pathname.slice(rootDirectoryPathname.length);
+    }
+    throw new Error(`UnexpectedExternalPathname:${pathname}`);
+};

@@ -16,5 +16,6 @@ runScript(async () => {
     const envFileUrl = new URL('.env.local', rootDirectoryUrl);
     await fs.promises.writeFile(envFileUrl, [
         `TableName=${TableName}`,
+        '',
     ].join('\n'));
 });

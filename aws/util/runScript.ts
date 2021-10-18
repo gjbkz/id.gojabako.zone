@@ -1,4 +1,5 @@
 import * as console from 'console';
+import {formatNanoSec} from './formatNanoSec';
 
 export const runScript = (asyncFn: () => Promise<unknown>) => {
     const startAt = process.hrtime.bigint();
@@ -7,7 +8,7 @@ export const runScript = (asyncFn: () => Promise<unknown>) => {
     .then((result) => {
         const endAt = process.hrtime.bigint();
         const elapsed = endAt - startAt;
-        console.info(`elapsed: ${elapsed}`);
+        console.info(`elapsed: ${formatNanoSec(Number(elapsed))}`);
         if (typeof result !== 'undefined') {
             console.info(result);
         }
