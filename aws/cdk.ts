@@ -62,7 +62,7 @@ const roleRotateKey = new iam.Role(stack, 'RotateKeyRole', {
 const lambdaFnRotateKey: lambda.IFunction = new lambda.Function(stack, 'RotateKey', {
     role: roleRotateKey,
     layers: [lambdaLayer],
-    code: new lambda.AssetCode(getRelativePath(new URL('rotateKey', lambdaCodeDirectoryUrl))),
+    code: new lambda.AssetCode(getRelativePath(new URL('RotateKey', lambdaCodeDirectoryUrl))),
     runtime: lambda.Runtime.NODEJS_14_X,
     handler: 'index.handler',
     environment: {
