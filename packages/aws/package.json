@@ -1,0 +1,42 @@
+{
+    "name": "@id.gojabako.zone/aws",
+    "private": true,
+    "scripts": {
+        "test": "run-s test:*",
+        "test:type": "tsc",
+        "deploy": "run-s deploy:*",
+        "deploy:buildLambda": "ts-node aws/scripts/buildLambda.ts",
+        "deploy:cdk": "cdk --app \"npx ts-node aws/cdk.ts\" deploy --all --require-approval never --outputs-file cdk.out/output.json",
+        "deploy:createEnv": "ts-node aws/scripts/createEnv.ts",
+        "policy": "ts-node aws/scripts/generatePolicyDocument.ts"
+    },
+    "dependencies": {
+        "@aws-sdk/client-dynamodb": "3.37.0",
+        "@aws-sdk/util-dynamodb": "3.37.0",
+        "@id.gojabako.zone/util-aws": "file:../util-aws",
+        "@id.gojabako.zone/util-es": "file:../util-es"
+    },
+    "devDependencies": {
+        "@aws-cdk/aws-cloudwatch": "1.128.0",
+        "@aws-cdk/aws-dynamodb": "1.128.0",
+        "@aws-cdk/aws-events": "1.128.0",
+        "@aws-cdk/aws-events-targets": "1.128.0",
+        "@aws-cdk/aws-lambda": "1.128.0",
+        "@aws-cdk/core": "1.128.0",
+        "@id.gojabako.zone/util-node": "file:../util-node",
+        "aws-cdk": "1.128.0",
+        "esbuild": "0.13.8"
+    },
+    "jest": {
+        "preset": "ts-jest/presets/default-esm",
+        "collectCoverage": true
+    },
+    "eslintConfig": {
+        "env": {
+            "node": true
+        },
+        "rules": {
+            "@nlib/no-globals": "off"
+        }
+    }
+}

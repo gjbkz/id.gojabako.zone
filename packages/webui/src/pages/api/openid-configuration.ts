@@ -1,0 +1,16 @@
+import type {NextApiHandler} from 'next';
+import {JSON, Promise} from '../../global';
+
+const handler: NextApiHandler = async (_req, res) => {
+    await Promise.resolve();
+    res.writeHead(200, {
+        'content-type': 'application/json; charset=utf-8',
+        'cache-control': 'public, max-age=3600',
+    });
+    res.write(JSON.stringify({
+        id_token_signing_alg_values_supported: ['ES256'],
+    }, null, 2));
+    res.end();
+};
+
+export default handler;

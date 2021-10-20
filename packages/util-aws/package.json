@@ -1,0 +1,24 @@
+{
+    "name": "@id.gojabako.zone/util-aws",
+    "private": true,
+    "scripts": {
+        "test": "run-s test:*",
+        "test:type": "tsc",
+        "test:jest": "jest"
+    },
+    "dependencies": {
+        "@id.gojabako.zone/util-es": "file:../util-es"
+    },
+    "jest": {
+        "preset": "ts-jest/presets/default-esm",
+        "collectCoverage": true
+    },
+    "eslintConfig": {
+        "env": {
+            "node": true
+        },
+        "rules": {
+            "@nlib/no-globals": "off"
+        }
+    }
+}

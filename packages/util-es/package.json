@@ -1,0 +1,13 @@
+{
+    "name": "@id.gojabako.zone/util-es",
+    "private": true,
+    "scripts": {
+        "test": "run-s test:*",
+        "test:type": "tsc",
+        "test:jest": "jest"
+    },
+    "jest": {
+        "preset": "ts-jest/presets/default-esm",
+        "collectCoverage": true
+    }
+}
