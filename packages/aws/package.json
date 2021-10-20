@@ -8,6 +8,7 @@
         "deploy:buildLambda": "ts-node aws/scripts/buildLambda.ts",
         "deploy:cdk": "cdk --app \"npx ts-node aws/cdk.ts\" deploy --all --require-approval never --outputs-file cdk.out/output.json",
         "deploy:createEnv": "ts-node aws/scripts/createEnv.ts",
+        "destroy": "cdk --app \"npx ts-node aws/cdk.ts\" destroy --all",
         "policy": "ts-node aws/scripts/generatePolicyDocument.ts"
     },
     "dependencies": {
