@@ -5,11 +5,11 @@
         "test": "run-s test:*",
         "test:type": "tsc",
         "deploy": "run-s deploy:*",
-        "deploy:buildLambda": "ts-node aws/scripts/buildLambda.ts",
-        "deploy:cdk": "cdk --app \"npx ts-node aws/cdk.ts\" deploy --all --require-approval never --outputs-file cdk.out/output.json",
-        "deploy:createEnv": "ts-node aws/scripts/createEnv.ts",
-        "destroy": "cdk --app \"npx ts-node aws/cdk.ts\" destroy --all",
-        "policy": "ts-node aws/scripts/generatePolicyDocument.ts"
+        "deploy:buildLambda": "ts-node scripts/buildLambda.ts",
+        "deploy:cdk": "cdk --app \"npx ts-node cdk.ts\" deploy --all --require-approval never --outputs-file cdk.out/output.json",
+        "deploy:createEnv": "ts-node scripts/createEnv.ts",
+        "destroy": "cdk --app \"npx ts-node cdk.ts\" destroy --all",
+        "policy": "ts-node scripts/generatePolicyDocument.ts"
     },
     "dependencies": {
         "@aws-sdk/client-dynamodb": "3.37.0",
