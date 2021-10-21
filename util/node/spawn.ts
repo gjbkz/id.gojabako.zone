@@ -12,8 +12,12 @@ export const spawn = async (
     command: string,
     {quiet, ...options}: childProcess.ExecOptions & {quiet?: boolean} = {},
 ): Promise<SpawnResult> => await new Promise<SpawnResult>((resolve, reject) => {
+    if (!quiet) {
+        process.stdout.write(`> ${command}\n`);
+    }
     const subprocess = childProcess.spawn(command, [], {
         shell: true,
+        stdio: 'inherit',
         ...options,
     });
     const stdoutChunks: Array<Buffer> = [];
@@ -27,16 +31,5 @@ export const spawn = async (
             const stdout = `${Buffer.concat(stdoutChunks)}`.trim();
             resolve({stdout, stderr});
         }
-    });
-    if (!quiet) {
-        process.stdout.write(`> ${command}\n`);
-        subprocess.stdout.pipe(process.stdout);
-        subprocess.stderr.pipe(process.stderr);
-    }
-    subprocess.stdout.on('data', (data: Buffer) => {
-        stdoutChunks.push(data);
-    });
-    subprocess.stderr.on('data', (data: Buffer) => {
-        stderrChunks.push(data);
     });
 });
