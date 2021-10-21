@@ -1,5 +1,7 @@
 import * as console from 'console';
-import {formatNanoSec} from './formatNanoSec';
+import * as process from 'process';
+import {formatNanoSec} from '../es/formatNanoSec';
+import {Number, Promise} from '../es/global';
 
 export const runScript = (asyncFn: () => Promise<unknown>) => {
     const startAt = process.hrtime.bigint();

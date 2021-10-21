@@ -1,6 +1,7 @@
 import {GetCallerIdentityCommand, STSClient} from '@aws-sdk/client-sts';
-import {region} from '../constants';
-import {enableCache} from '../util/enableCache';
+import {region} from '../../aws/constants';
+import {enableCache} from '../es/enableCache';
+import {Error, JSON} from '../es/global';
 
 const stsClient = new STSClient({region});
 

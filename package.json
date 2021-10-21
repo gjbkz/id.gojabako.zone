@@ -72,15 +72,6 @@
         "overrides": [
             {
                 "files": [
-                    "./*.{js,mjs}",
-                    "./aws/**/*"
-                ],
-                "rules": {
-                    "@nlib/no-globals": "off"
-                }
-            },
-            {
-                "files": [
                     "*.test.ts"
                 ],
                 "plugins": [

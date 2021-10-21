@@ -1,7 +1,7 @@
 import * as fs from 'fs';
+import {getAccountId} from '../../util/aws/getAccountId';
+import {runScript} from '../../util/node/runScript';
 import {getStackName, region, rootDirectoryUrl} from '../constants';
-import {getAccountId} from '../util/getAccountId';
-import {runScript} from '../util/runScript';
 
 runScript(async () => {
     const accountId = await getAccountId();

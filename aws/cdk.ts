@@ -1,18 +1,17 @@
-import * as iam from '@aws-cdk/aws-iam';
 import * as cloudwatch from '@aws-cdk/aws-cloudwatch';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
 import * as events from '@aws-cdk/aws-events';
 import * as eventsTargets from '@aws-cdk/aws-events-targets';
+import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as cdk from '@aws-cdk/core';
-import {getRelativePath, lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl, region, getStackName, vercelEnv} from './constants';
-import {output} from './output';
+import {getPathToAsset, lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl, region, stackName, vercelEnv} from './constants';
 
 const app = new cdk.App();
-const stackName = getStackName(vercelEnv);
 const stack = new cdk.Stack(app, stackName, {env: {region}});
 const lambdaBasicExecution = iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole');
 const xrayDaemonWrite = iam.ManagedPolicy.fromAwsManagedPolicyName('AWSXRayDaemonWriteAccess');
+const output = (id: string, value: string) => new cdk.CfnOutput(stack, id, {value});
 
 const dashboard = new cloudwatch.Dashboard(stack, 'Dashboard', {
     /**
@@ -21,6 +20,7 @@ const dashboard = new cloudwatch.Dashboard(stack, 'Dashboard', {
      */
     dashboardName: stackName,
 });
+
 /**
  * DO NOT CHANGE, or existing data will be lost due to table replacement.
  * デプロイ後にここを変更するとテーブルが置換されるので既存のデータがなくなります。
@@ -37,7 +37,8 @@ const table = new dynamodb.Table(stack, 'Table', {
      */
     removalPolicy: vercelEnv === 'develop' ? cdk.RemovalPolicy.DESTROY : cdk.RemovalPolicy.RETAIN,
 });
-output(stack, 'TableName', table.tableName);
+output('TableName', table.tableName);
+
 const queryPrivateKeyPolicy = new iam.ManagedPolicy(stack, 'QueryPrivateKeyPolicy');
 queryPrivateKeyPolicy.addStatements(new iam.PolicyStatement({
     actions: ['dynamodb:Query'],
@@ -48,6 +49,7 @@ queryPrivateKeyPolicy.addStatements(new iam.PolicyStatement({
         },
     },
 }));
+
 const putPrivateKeyPolicy = new iam.ManagedPolicy(stack, 'PutPrivateKeyPolicy');
 putPrivateKeyPolicy.addStatements(new iam.PolicyStatement({
     actions: ['dynamodb:PutItem'],
@@ -66,7 +68,7 @@ const lambdaLayer = new lambda.LayerVersion(stack, 'LambdaLayer', {
      */
     layerVersionName: `${stackName}-node14`,
     compatibleRuntimes: [lambda.Runtime.NODEJS_14_X],
-    code: new lambda.AssetCode(getRelativePath(lambdaLayerDirectoryUrl)),
+    code: new lambda.AssetCode(getPathToAsset(lambdaLayerDirectoryUrl)),
 });
 
 const roleRotateKey = new iam.Role(stack, 'RotateKeyRole', {
@@ -78,10 +80,11 @@ const roleRotateKey = new iam.Role(stack, 'RotateKeyRole', {
         putPrivateKeyPolicy,
     ],
 });
+
 const lambdaFnRotateKey: lambda.IFunction = new lambda.Function(stack, 'RotateKey', {
     role: roleRotateKey,
     layers: [lambdaLayer],
-    code: new lambda.AssetCode(getRelativePath(new URL('RotateKey', lambdaCodeDirectoryUrl))),
+    code: new lambda.AssetCode(getPathToAsset(new URL('RotateKey', lambdaCodeDirectoryUrl))),
     runtime: lambda.Runtime.NODEJS_14_X,
     handler: 'index.handler',
     environment: {

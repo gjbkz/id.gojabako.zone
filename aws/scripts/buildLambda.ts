@@ -1,9 +1,9 @@
-import * as fs from 'fs';
 import * as esbuild from 'esbuild';
+import * as fs from 'fs';
 import packageJson from '../../package.json';
-import {runScript} from '../util/runScript';
-import {lambdaCodeDirectoryUrl, lambdaSourceDirectoryUrl, lambdaLayerDirectoryUrl} from '../constants';
-import {spawn} from '../util/spawn';
+import {runScript} from '../../util/node/runScript';
+import {spawn} from '../../util/node/spawn';
+import {lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl, lambdaSourceDirectoryUrl} from '../constants';
 
 runScript(async () => {
     const [handlers, dependencies] = await Promise.all([bundleCode(), bundleLayer()]);

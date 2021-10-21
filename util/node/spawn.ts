@@ -1,4 +1,7 @@
+import {Buffer} from 'buffer';
 import * as childProcess from 'child_process';
+import * as process from 'process';
+import {Promise} from '../es/global';
 
 export interface SpawnResult {
     stdout: string,

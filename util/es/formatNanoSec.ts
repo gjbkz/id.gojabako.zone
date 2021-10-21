@@ -1,3 +1,5 @@
+import {Math} from './global';
+
 const ns1Sec = 1000000000;
 const ns1Min = 60000000000;
 

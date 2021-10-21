@@ -1,3 +1,5 @@
+import {WeakMap} from './global';
+
 const cache = new WeakMap<() => unknown, {value: unknown}>();
 export const enableCache = <T>(cachee: () => T) => () => {
     let cached = cache.get(cachee);

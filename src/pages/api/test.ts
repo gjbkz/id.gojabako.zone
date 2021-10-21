@@ -1,5 +1,5 @@
 import type {NextApiHandler} from 'next';
-import {JSON, Promise} from '../../global';
+import {JSON, Promise} from '../../../util/es/global';
 
 const handler: NextApiHandler = async (_req, res) => {
     await Promise.resolve();
