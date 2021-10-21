@@ -1,6 +1,8 @@
 import * as console from 'console';
+import * as process from 'process';
 import {DynamoDBClient, QueryCommand} from '@aws-sdk/client-dynamodb';
 import {convertToAttr} from '@aws-sdk/util-dynamodb';
+import {Date} from '../../../util/es/global';
 
 const client = new DynamoDBClient({region: process.env.TableRegion});
 const command = new QueryCommand({

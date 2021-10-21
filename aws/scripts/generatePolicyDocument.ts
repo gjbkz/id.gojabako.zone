@@ -1,5 +1,7 @@
 import * as fs from 'fs';
+import * as process from 'process';
 import {getAccountId} from '../../util/aws/getAccountId';
+import {JSON, URL} from '../../util/es/global';
 import {runScript} from '../../util/node/runScript';
 import {getStackName, region, rootDirectoryUrl} from '../constants';
 

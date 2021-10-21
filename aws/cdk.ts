@@ -5,6 +5,7 @@ import * as eventsTargets from '@aws-cdk/aws-events-targets';
 import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as cdk from '@aws-cdk/core';
+import {URL} from '../util/es/global';
 import {getPathToAsset, lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl, region, stackName, vercelEnv} from './constants';
 
 const app = new cdk.App();

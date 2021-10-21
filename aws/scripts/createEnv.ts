@@ -1,4 +1,5 @@
 import * as fs from 'fs';
+import {Error, JSON, URL} from '../../util/es/global';
 import {runScript} from '../../util/node/runScript';
 import {rootDirectoryUrl, stackName} from '../constants';
 

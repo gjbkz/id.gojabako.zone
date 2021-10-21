@@ -19,8 +19,14 @@
         "build:next": "next build",
         "destroy": "cdk --app \"npx ts-node aws/cdk.ts\" destroy --all",
         "start": "NODE_ENV=production node server.mjs",
-        "lint": "next lint",
+        "lint": "eslint aws src util",
         "generatePolicyDocument": "ts-node aws/scripts/generatePolicyDocument.ts"
+    },
+    "dependencies": {
+        "@aws-sdk/client-dynamodb": "3.37.0",
+        "@aws-sdk/client-iam": "3.37.0",
+        "@aws-sdk/client-sts": "3.37.0",
+        "@aws-sdk/util-dynamodb": "3.37.0"
     },
     "devDependencies": {
         "@aws-cdk/aws-cloudwatch": "1.128.0",
@@ -94,11 +100,5 @@
         "extends": [
             "github>nlibjs/renovate-config"
         ]
-    },
-    "dependencies": {
-        "@aws-sdk/client-dynamodb": "3.37.0",
-        "@aws-sdk/client-iam": "3.37.0",
-        "@aws-sdk/client-sts": "3.37.0",
-        "@aws-sdk/util-dynamodb": "3.37.0"
     }
 }

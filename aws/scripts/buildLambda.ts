@@ -1,6 +1,7 @@
 import * as esbuild from 'esbuild';
 import * as fs from 'fs';
 import packageJson from '../../package.json';
+import {JSON, Object, Promise, URL} from '../../util/es/global';
 import {runScript} from '../../util/node/runScript';
 import {spawn} from '../../util/node/spawn';
 import {lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl, lambdaSourceDirectoryUrl} from '../constants';
