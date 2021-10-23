@@ -9,5 +9,6 @@ export const {
     Object,
     Promise,
     URL,
+    Set,
     WeakMap,
 } = globalThis;

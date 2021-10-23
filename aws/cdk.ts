@@ -6,20 +6,23 @@ import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as cdk from '@aws-cdk/core';
 import {URL} from '../util/es/global';
-import {getPathToAsset, lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl, region, stackName, vercelEnv} from './constants';
+import {lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl} from '../util/fs/constants';
+import {region, stackName, vercelEnv} from '../util/aws/constants';
+import {getPathToAsset} from '../util/fs/getPathToAsset';
 
 const app = new cdk.App();
 const stack = new cdk.Stack(app, stackName, {env: {region}});
 const lambdaBasicExecution = iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaBasicExecutionRole');
 const xrayDaemonWrite = iam.ManagedPolicy.fromAwsManagedPolicyName('AWSXRayDaemonWriteAccess');
 const output = (id: string, value: string) => new cdk.CfnOutput(stack, id, {value});
+output('StackName', stack.stackName);
 
 const dashboard = new cloudwatch.Dashboard(stack, 'Dashboard', {
     /**
      * aws-cdkはdashboardNameの先頭にスタック名をつけないため、手動でつけます。
      * Prefix stackName manually because aws-cdk doesn't do it to LayerVersion.
      */
-    dashboardName: stackName,
+    dashboardName: cdk.Aws.STACK_NAME,
 });
 
 /**
@@ -36,7 +39,7 @@ const table = new dynamodb.Table(stack, 'Table', {
      * https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-attribute-updatereplacepolicy.html
      * https://github.com/aws-cloudformation/cloudformation-coverage-roadmap/issues/224
      */
-    removalPolicy: vercelEnv === 'develop' ? cdk.RemovalPolicy.DESTROY : cdk.RemovalPolicy.RETAIN,
+    removalPolicy: vercelEnv === 'development' ? cdk.RemovalPolicy.DESTROY : cdk.RemovalPolicy.RETAIN,
 });
 output('TableName', table.tableName);
 
@@ -67,7 +70,7 @@ const lambdaLayer = new lambda.LayerVersion(stack, 'LambdaLayer', {
      * aws-cdkはlayerVersionNameの先頭にスタック名をつけないため、手動でつけます。
      * Prefix stackName manually because aws-cdk doesn't do it to LayerVersion.
      */
-    layerVersionName: `${stackName}-node14`,
+    layerVersionName: `${cdk.Aws.STACK_NAME}-node14`,
     compatibleRuntimes: [lambda.Runtime.NODEJS_14_X],
     code: new lambda.AssetCode(getPathToAsset(lambdaLayerDirectoryUrl)),
 });

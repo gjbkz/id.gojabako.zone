@@ -1,10 +1,11 @@
+import * as console from 'console';
 import * as esbuild from 'esbuild';
 import * as fs from 'fs';
 import packageJson from '../../package.json';
 import {JSON, Object, Promise, URL} from '../../util/es/global';
+import {lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl, lambdaSourceDirectoryUrl} from '../../util/fs/constants';
 import {runScript} from '../../util/node/runScript';
 import {spawn} from '../../util/node/spawn';
-import {lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl, lambdaSourceDirectoryUrl} from '../constants';
 
 runScript(async () => {
     const [handlers, dependencies] = await Promise.all([bundleCode(), bundleLayer()]);
@@ -17,14 +18,19 @@ const bundleCode = async () => {
     for await (const fileUrl of listLambdaHandlerFileUrls()) {
         const relativePath = fileUrl.pathname.slice(lambdaSourceDirectoryUrl.pathname.length);
         const destUrl = new URL(relativePath.replace(/\.ts$/, '.js'), lambdaCodeDirectoryUrl);
-        esbuild.buildSync({
+        const result = esbuild.buildSync({
+            target: 'node14',
+            format: 'cjs',
             entryPoints: [fileUrl.pathname],
             outfile: destUrl.pathname,
             bundle: true,
             platform: 'node',
             external,
-            format: 'cjs',
         });
+        for (const message of [...result.errors, result.warnings]) {
+            console.error(message);
+        }
+        console.info(`Bundled: ${relativePath}`);
         handlerFileNames.push(relativePath);
     }
     return handlerFileNames;

@@ -3,24 +3,28 @@ import * as process from 'process';
 import {getAccountId} from '../../util/aws/getAccountId';
 import {JSON, URL} from '../../util/es/global';
 import {runScript} from '../../util/node/runScript';
-import {getStackName, region, rootDirectoryUrl} from '../constants';
+import {rootDirectoryUrl} from '../../util/fs/constants';
+import {kebabCase} from '../../util/es/kebabCase';
+import {hostname} from '../../app.config';
+import type {VercelEnv} from '../../util/aws/constants';
+import {region, vercelEnvs} from '../../util/aws/constants';
+import {getPathToAsset} from '../../util/fs/getPathToAsset';
 
 runScript(async () => {
     const accountId = await getAccountId();
     const destDirectoryUrl = new URL('cdk.out/policy/', rootDirectoryUrl);
     await fs.promises.mkdir(destDirectoryUrl, {recursive: true});
-    for (const env of ['develop', 'staging', 'production']) {
-        const policyDocument = getPolicyDocument(accountId, env);
-        const destUrl = new URL(`${env}.json`, destDirectoryUrl);
+    for (const vercelEnv of vercelEnvs) {
+        const policyDocument = getPolicyDocument(accountId, vercelEnv);
+        const destUrl = new URL(`${vercelEnv}.json`, destDirectoryUrl);
         await fs.promises.writeFile(destUrl, JSON.stringify(policyDocument, null, 4));
-        const relativePath = destUrl.pathname.slice(rootDirectoryUrl.pathname.length);
-        process.stdout.write(`written: ${relativePath}\n`);
+        process.stdout.write(`written: ${getPathToAsset(destUrl)}\n`);
     }
 });
 
 // eslint-disable-next-line max-lines-per-function
-const getPolicyDocument = (accountId: string, env: string) => {
-    const stackName = getStackName(env);
+const getPolicyDocument = (accountId: string, vercelEnv: VercelEnv) => {
+    const stackName = kebabCase(`${hostname}-${vercelEnv}`);
     return {
         Version: '2012-10-17',
         Statement: [
