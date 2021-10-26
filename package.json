@@ -23,7 +23,7 @@
         "generatePolicyDocument": "ts-node aws/scripts/generatePolicyDocument.ts"
     },
     "dependencies": {
-        "@aws-sdk/client-dynamodb": "3.37.0",
+        "@aws-sdk/client-dynamodb": "3.38.0",
         "@aws-sdk/client-iam": "3.37.0",
         "@aws-sdk/client-sts": "3.37.0",
         "@aws-sdk/util-dynamodb": "3.37.0"
