@@ -1,6 +1,7 @@
-const EsifyCSSWebpackPlugin = require('esifycss-webpack-plugin');
+/* eslint-disable @nlib/no-globals */
+import EsifyCSSWebpackPlugin from 'esifycss-webpack-plugin';
 
-module.exports = {
+const nextConfig = {
     reactStrictMode: true,
     pageExtensions: ['tsx', 'ts'],
     webpack: (config) => {
@@ -14,3 +15,5 @@ module.exports = {
         ];
     },
 };
+
+export default nextConfig;

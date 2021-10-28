@@ -40,11 +40,7 @@ app.prepare().then(() => {
         if (!parsedUrl.pathname.startsWith('/_')) {
             console.info(`${req.method} ${req.url}`);
         }
-        if (parsedUrl.pathname.startsWith('/api/')) {
-            handleApiRequest(req, res, parsedUrl).catch(onError);
-        } else {
-            app.render(req, res, parsedUrl.pathname, parsedUrl.query).catch(onError);
-        }
+        handleApiRequest(req, res, parsedUrl).catch(onError);
     };
     server.once('error', onError);
     server.once('listening', () => console.info(`> Ready on ${rootUrl.href}`));
