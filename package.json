@@ -29,7 +29,7 @@
         "@aws-sdk/util-dynamodb": "3.39.0"
     },
     "devDependencies": {
-        "@aws-cdk/aws-cloudwatch": "1.129.0",
+        "@aws-cdk/aws-cloudwatch": "1.130.0",
         "@aws-cdk/aws-dynamodb": "1.129.0",
         "@aws-cdk/aws-events": "1.129.0",
         "@aws-cdk/aws-events-targets": "1.129.0",
