@@ -33,7 +33,7 @@
         "@aws-cdk/aws-dynamodb": "1.130.0",
         "@aws-cdk/aws-events": "1.130.0",
         "@aws-cdk/aws-events-targets": "1.130.0",
-        "@aws-cdk/aws-lambda": "1.129.0",
+        "@aws-cdk/aws-lambda": "1.130.0",
         "@aws-cdk/core": "1.129.0",
         "@nlib/eslint-config": "3.17.28",
         "@nlib/githooks": "0.1.0",
