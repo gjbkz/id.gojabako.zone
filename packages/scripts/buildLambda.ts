@@ -2,10 +2,11 @@ import * as console from 'console';
 import * as esbuild from 'esbuild';
 import * as fs from 'fs';
 import packageJson from '../../package.json';
-import {JSON, Object, Promise, URL} from '../../packages/es/global';
-import {lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl, lambdaSourceDirectoryUrl} from '../../packages/fs/constants';
-import {runScript} from '../../packages/node/runScript';
-import {spawn} from '../../packages/node/spawn';
+import {JSON, Object, Promise, URL} from '../es/global';
+import {iterate} from '../es/iterate';
+import {lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl, lambdaSourceDirectoryUrl} from '../fs/constants';
+import {runScript} from '../node/runScript';
+import {spawn} from '../node/spawn';
 
 runScript(async () => {
     const [handlers, dependencies] = await Promise.all([bundleCode(), bundleLayer()]);
@@ -27,7 +28,7 @@ const bundleCode = async () => {
             platform: 'node',
             external,
         });
-        for (const message of [...result.errors, result.warnings]) {
+        for (const message of iterate(result.errors, result.warnings)) {
             console.error(message);
         }
         console.info(`Bundled: ${relativePath}`);

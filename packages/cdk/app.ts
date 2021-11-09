@@ -5,10 +5,10 @@ import * as eventsTargets from '@aws-cdk/aws-events-targets';
 import * as iam from '@aws-cdk/aws-iam';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as cdk from '@aws-cdk/core';
-import {URL} from '../packages/es/global';
-import {lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl} from '../packages/fs/constants';
-import {region, stackName, vercelEnv} from '../packages/aws/constants';
-import {getPathToAsset} from '../packages/fs/getPathToAsset';
+import {URL} from '../es/global';
+import {lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl} from '../fs/constants';
+import {region, stackName, vercelEnv} from '../aws/constants';
+import {getPathToAsset} from '../fs/getPathToAsset';
 
 const app = new cdk.App();
 const stack = new cdk.Stack(app, stackName, {env: {region}});
