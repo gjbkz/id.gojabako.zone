@@ -19,7 +19,7 @@
         "build:next": "next build",
         "destroy": "cdk --app \"npx ts-node aws/cdk.ts\" destroy --all",
         "start": "NODE_ENV=production ts-node app.server.ts",
-        "lint": "eslint aws src util",
+        "lint": "eslint --ext .ts,.tsx aws src packages",
         "generatePolicyDocument": "ts-node aws/scripts/generatePolicyDocument.ts"
     },
     "dependencies": {
