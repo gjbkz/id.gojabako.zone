@@ -2,10 +2,10 @@ import * as console from 'console';
 import * as esbuild from 'esbuild';
 import * as fs from 'fs';
 import packageJson from '../../package.json';
-import {JSON, Object, Promise, URL} from '../../util/es/global';
-import {lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl, lambdaSourceDirectoryUrl} from '../../util/fs/constants';
-import {runScript} from '../../util/node/runScript';
-import {spawn} from '../../util/node/spawn';
+import {JSON, Object, Promise, URL} from '../../packages/es/global';
+import {lambdaCodeDirectoryUrl, lambdaLayerDirectoryUrl, lambdaSourceDirectoryUrl} from '../../packages/fs/constants';
+import {runScript} from '../../packages/node/runScript';
+import {spawn} from '../../packages/node/spawn';
 
 runScript(async () => {
     const [handlers, dependencies] = await Promise.all([bundleCode(), bundleLayer()]);

@@ -1,14 +1,14 @@
 import * as fs from 'fs';
 import * as process from 'process';
-import {getAccountId} from '../../util/aws/getAccountId';
-import {JSON, URL} from '../../util/es/global';
-import {runScript} from '../../util/node/runScript';
-import {rootDirectoryUrl} from '../../util/fs/constants';
-import {kebabCase} from '../../util/es/kebabCase';
+import {getAccountId} from '../../packages/aws/getAccountId';
+import {JSON, URL} from '../../packages/es/global';
+import {runScript} from '../../packages/node/runScript';
+import {rootDirectoryUrl} from '../../packages/fs/constants';
+import {kebabCase} from '../../packages/es/kebabCase';
 import {hostname} from '../../app.config';
-import type {VercelEnv} from '../../util/aws/constants';
-import {region, vercelEnvs} from '../../util/aws/constants';
-import {getPathToAsset} from '../../util/fs/getPathToAsset';
+import type {VercelEnv} from '../../packages/aws/constants';
+import {region, vercelEnvs} from '../../packages/aws/constants';
+import {getPathToAsset} from '../../packages/fs/getPathToAsset';
 
 runScript(async () => {
     const accountId = await getAccountId();

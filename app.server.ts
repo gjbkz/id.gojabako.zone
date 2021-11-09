@@ -5,7 +5,7 @@ import * as console from 'console';
 import * as process from 'process';
 import * as url from 'url';
 import next from 'next';
-import {URL} from './util/es/global';
+import {URL} from './packages/es/global';
 
 const config = {
     noHttps: process.argv.includes('--http'),

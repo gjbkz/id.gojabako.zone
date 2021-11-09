@@ -1,8 +1,8 @@
 import * as fs from 'fs';
-import {Error, JSON, URL} from '../../util/es/global';
-import {runScript} from '../../util/node/runScript';
-import {rootDirectoryUrl} from '../../util/fs/constants';
-import {stackName} from '../../util/aws/constants';
+import {Error, JSON, URL} from '../../packages/es/global';
+import {runScript} from '../../packages/node/runScript';
+import {rootDirectoryUrl} from '../../packages/fs/constants';
+import {stackName} from '../../packages/aws/constants';
 
 type CDKOutput = Record<string, Record<string, string | undefined>>;
 
