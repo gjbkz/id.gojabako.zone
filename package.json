@@ -19,7 +19,7 @@
         "build-aws:createEnv": "ts-node packages/scripts/createEnv.ts",
         "destroy": "cdk --app \"npx ts-node packages/cdk/app.ts\" destroy --all",
         "start": "NODE_ENV=production ts-node app.server.ts",
-        "lint": "eslint --ext .ts,.tsx aws src packages",
+        "lint": "eslint --ext .ts,.tsx src packages",
         "generatePolicyDocument": "ts-node packages/scripts/generatePolicyDocument.ts"
     },
     "dependencies": {
