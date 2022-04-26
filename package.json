@@ -24,7 +24,7 @@
     },
     "dependencies": {
         "@aws-sdk/client-dynamodb": "3.76.0",
-        "@aws-sdk/client-iam": "3.72.0",
+        "@aws-sdk/client-iam": "3.76.0",
         "@aws-sdk/client-sts": "3.72.0",
         "@aws-sdk/util-dynamodb": "3.72.0"
     },
