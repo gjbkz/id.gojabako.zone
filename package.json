@@ -41,7 +41,7 @@
         "@types/react": "17.0.45",
         "@typescript-eslint/eslint-plugin": "5.23.0",
         "@typescript-eslint/parser": "5.23.0",
-        "aws-cdk": "2.23.0",
+        "aws-cdk": "2.24.1",
         "esbuild": "0.14.39",
         "esifycss": "1.4.37",
         "esifycss-webpack-plugin": "0.1.3",
