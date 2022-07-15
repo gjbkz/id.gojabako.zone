@@ -40,7 +40,7 @@
         "@types/jest": "27.5.2",
         "@types/react": "17.0.47",
         "@typescript-eslint/eslint-plugin": "5.30.6",
-        "@typescript-eslint/parser": "5.30.5",
+        "@typescript-eslint/parser": "5.30.6",
         "aws-cdk": "2.31.1",
         "esbuild": "0.14.49",
         "esifycss": "1.4.37",
